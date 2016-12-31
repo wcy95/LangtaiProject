@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context-3.1.xsd
+            http://www.springframework.org/schema/mvc
+            http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+    <mvc:annotation-driven>
+       <!-- <mvc:message-converters>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg value="UTF-8"/>
+            </bean>
+            <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter4">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>text/html;charset=UTF-8</value>
+                        <value>application/json</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>-->
+    </mvc:annotation-driven>
+
+    <!-- 配置@Controller处理器 -->
+    <mvc:annotation-driven />
+
+    <!-- 扫描controller -->
+    <context:component-scan base-package="com.langtai.controller" />
+
+    <mvc:resources mapping="/css/**" location="/WEB-INF/css/"/>
+    <mvc:resources mapping="/js/**" location="/WEB-INF/js/" />
+    <mvc:resources mapping="/images/**" location="/WEB-INF/images/" />
+    <mvc:resources mapping="/upload/**" location="/WEB-INF/upload/"/>
+
+    <!-- 配置视图解析器 -->
+    <bean
+            class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/jsp/"></property>
+        <property name="suffix" value=".jsp" />
+    </bean>
+
+    <!-- 处理文件上传 -->
+    <bean
+            id="multipartResolver"
+            class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property
+                name="defaultEncoding"
+                value="utf-8" /> <!-- 默认编码 (ISO-8859-1) -->
+        <property
+                name="maxInMemorySize"
+                value="10240" /> <!-- 最大内存大小 (10240) -->
+        <property
+                name="uploadTempDir"
+                value="/WEB-INF/upload" /> <!-- 上传后的目录名 (WebUtils#TEMP_DIR_CONTEXT_ATTRIBUTE) -->
+        <property
+                name="maxUploadSize"
+                value="-1" /> <!-- 最大文件大小，-1为无限止(-1) -->
+    </bean>
+
+    <!-- 邮件服务器 -->
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="protocol" value="smtp"></property>
+        <property name="host" value="smtpdm.aliyun.com"></property>
+        <property name="username" value="weborder@order.langtaichem.com"></property>
+        <property name="password" value="langtaichem33"></property>
+        <property name="port" value="25"></property>
+        <property name="defaultEncoding" value="UTF-8"></property>
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+                <prop key="mail.smtp.timeout">25000</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- 定义邮件模板类 -->
+    <!--<bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+        <property name="resourceLoaderPath" value="/WEB-INF/velocity/"></property>
+        <property name="velocityProperties">
+            <props>
+                <prop key="default.contentType">text/html; charset=utf-8</prop>
+                <prop key="output.encoding">utf-8</prop>
+                <prop key="input.encoding">utf-8</prop>
+            </props>
+        </property>
+    </bean>-->
+</beans>
